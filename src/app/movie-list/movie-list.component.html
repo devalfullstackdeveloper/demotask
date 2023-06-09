@@ -1,0 +1,46 @@
+<div class="container mx-auto py-8">
+    <h1 class="text-4xl font-bold mb-8">Movie List</h1>
+    <!-- Search Input -->
+    <div class="flex items-center mb-4">
+        <input type="text" class="form-input" placeholder="Search movies..." [(ngModel)]="searchQuery">
+        <button class="btn ml-4" (click)="setSearchQuery(searchQuery)">Search</button>
+    </div>
+    <!-- Movie List -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <ng-container *ngIf="movies.length > 0; else noMoviesTemplate">
+            <div *ngFor="let movie of movies" class="bg-white rounded-lg shadow-lg p-4" (click)="goToMovieDetail(movie.imdbID)">
+                <img [src]="movie.Poster" alt="Movie Poster" class="w-full mb-4">
+                <h2 class="text-lg font-bold">{{ movie.Title }}</h2>
+                <p class="text-gray-500">Release Year: {{ movie.Year }}</p>
+                <!-- <p class="text-gray-500">IMDb Rating: {{ movie.imdbRating }}</p> -->
+            </div>
+        </ng-container>
+
+        <ng-template #noMoviesTemplate>
+            <p>No movies found.</p>
+        </ng-template>
+    </div>
+    <!-- Items Per Page -->
+    <div class="mt-4">
+        <label for="itemsPerPage" class="mr-2">Items per page:</label>
+        <select id="itemsPerPage" [(ngModel)]="itemsPerPage" (change)="searchMovies(searchQuery)">
+            <option value="{{totalItems}}">All</option>            
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+        </select>
+    </div>
+    <!-- Pagination -->
+   
+    <div class="mt-8">
+        <nav class="flex items-center justify-center" aria-label="Pagination">
+            <div class="join">
+                <button class="join-item btn btn-light mx-1" [class.disabled]="currentPage === 1" (click)="setPage(currentPage - 1)"><a href="#" class="pagination-previous">&laquo;</a></button>
+                <ng-container *ngFor="let page of getPaginationRange(); let i = index;">
+                    <button class="join-item btn btn-light mx-1" [class.btn-active]="page === currentPage" (click)="setPage(page)"><a href="#" class="pagination-link">{{ page }}</a></button>
+                </ng-container>
+                <button class="join-item btn mx-1 btn-light" [class.disabled]="currentPage === totalPages" (click)="setPage(currentPage + 1)"><a href="#" class="pagination-next">&raquo;</a></button>
+            </div>            
+        </nav>
+    </div>
+</div>
